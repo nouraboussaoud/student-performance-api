@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Connexion</h1>
+    <form id="login-form">
+        <label for="username">Nom d'utilisateur:</label>
+        <input type="text" name="username" id="username" required><br>
+        <label for="password">Mot de passe:</label>
+        <input type="password" name="password" id="password" required><br>
+        <button type="submit">Se connecter</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = '/';
+            } else {
+                document.getElementById('result').innerHTML = `<p style="color:red;">${result.error}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

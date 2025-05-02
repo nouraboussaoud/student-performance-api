@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prédiction des Performances Étudiantes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Prédiction des Performances Étudiantes</h1>
+            <a href="/logout" class="btn btn-outline-danger">Déconnexion</a>
+        </div>
+        
+        <div class="form-container">
+            <form id="prediction-form">
+                <div class="mb-3">
+                    <label class="form-label">Modèle:</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="model" id="rf" value="random_forest" checked>
+                        <label class="form-check-label" for="rf">Random Forest</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="model" id="gb" value="gradient_boosting">
+                        <label class="form-check-label" for="gb">Gradient Boosting</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="model" id="ensemble" value="ensemble">
+                        <label class="form-check-label" for="ensemble">Ensemble</label>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="Age" class="form-label">Age:</label>
+                        <input type="number" class="form-control" id="Age" name="Age" min="10" max="25" step="1" required>
+                        <div class="form-text">Âge de l'étudiant (entre 10 et 25)</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="StudyTimeWeekly" class="form-label">Temps d'étude hebdomadaire:</label>
+                        <input type="number" class="form-control" id="StudyTimeWeekly" name="StudyTimeWeekly" min="0" step="0.5" required>
+                        <div class="form-text">Heures d'étude par semaine</div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="Absences" class="form-label">Absences:</label>
+                        <input type="number" class="form-control" id="Absences" name="Absences" min="0" step="1" required>
+                        <div class="form-text">Nombre d'absences</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="GPA" class="form-label">GPA:</label>
+                        <input type="number" class="form-control" id="GPA" name="GPA" min="0" max="4" step="0.01" required>
+                        <div class="form-text">Moyenne générale (entre 0 et 4)</div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="ParentalEducation" class="form-label">Éducation parentale:</label>
+                        <select class="form-select" id="ParentalEducation" name="ParentalEducation" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="0">Primaire</option>
+                            <option value="1">Collège</option>
+                            <option value="2">Lycée</option>
+                            <option value="3">Licence</option>
+                            <option value="4">Master ou plus</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="ParentalSupport" class="form-label">Support parental:</label>
+                        <select class="form-select" id="ParentalSupport" name="ParentalSupport" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="0">Faible</option>
+                            <option value="1">Moyen</option>
+                            <option value="2">Élevé</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Prédire</button>
+                </div>
+            </form>
+            
+            <div id="result" class="result-container mt-4"></div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#prediction-form").on("submit", function(e) {
+                e.preventDefault();
+                
+                // Vérification que tous les champs sont remplis
+                let allFilled = true;
+                $(this).find('input, select').each(function() {
+                    if ($(this).prop('required') && !$(this).val()) {
+                        allFilled = false;
+                    }
+                });
+                
+                if (!allFilled) {
+                    $("#result").html('<div class="alert alert-danger">Veuillez remplir tous les champs obligatoires</div>');
+                    $("#result").show();
+                    return;
+                }
+                
+                // Récupération des données du formulaire
+                const formData = $(this).serializeArray();
+                const modelType = $("input[name='model']:checked").val();
+                
+                // Envoi de la requête AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "/predict?model=" + modelType,
+                    data: formData,
+                    success: function(response) {
+                        if (response.error) {
+                            $("#result").html(`<div class="alert alert-danger">${response.error}</div>`);
+                        } else {
+                            let resultHtml = '<div class="alert alert-success">';
+                            resultHtml += `<h4>Résultat de la prédiction:</h4>`;
+                            resultHtml += `<p><strong>Probabilité de réussite:</strong> ${(response.success_probability * 100).toFixed(2)}%</p>`;
+                            
+                            if (response.cluster_info) {
+                                resultHtml += `<p><strong>Groupe d'étudiants:</strong> ${response.cluster_info.cluster_name}</p>`;
+                                resultHtml += `<p><strong>Caractéristiques du groupe:</strong> ${response.cluster_info.description}</p>`;
+                            }
+                            
+                            resultHtml += '</div>';
+                            $("#result").html(resultHtml);
+                        }
+                        $("#result").show();
+                    },
+                    error: function() {
+                        $("#result").html('<div class="alert alert-danger">Erreur lors de la connexion au serveur. Veuillez réessayer.</div>');
+                        $("#result").show();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
