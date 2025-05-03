@@ -3,18 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Connexion</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <!-- Add Font Awesome if not already included -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h1>Connexion</h1>
-    <form id="login-form">
-        <label for="username">Nom d'utilisateur:</label>
-        <input type="text" name="username" id="username" required><br>
-        <label for="password">Mot de passe:</label>
-        <input type="password" name="password" id="password" required><br>
-        <button type="submit">Se connecter</button>
-    </form>
-    <div id="result"></div>
+    <div class="box">
+        <div class="login">
+            <div class="loginBx">
+                <h2>
+                    <i class="fa-solid fa-right-to-bracket"> Connexion</i>
+                </h2>
+                <form id="login-form">
+                    <input type="text" name="username" id="username" placeholder="Nom d'utilisateur" required>
+                    <input type="password" name="password" id="password" placeholder="Mot de passe" required>
+                    <input type="submit" value="Se connecter">
+                </form>
+                <div class="group">
+                    <p></p>
+                    <p></p>
+                </div>
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
     <script>
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
