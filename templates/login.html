@@ -3,31 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <title>Connexion</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login_new.css') }}">
     <!-- Add Font Awesome if not already included -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Password toggle eye styles */
+        .input-box.password-container {
+            position: relative;
+        }
+        
+        .eye-toggle-button {
+            padding: 0;
+            display: grid;
+            place-items: center;
+            height: 100%;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            border: 0;
+            background: transparent;
+            color: #0ef;
+            position: absolute;
+            right: 0;
+            z-index: 2;
+            top: 50%;
+            cursor: pointer;
+            transform: translateY(-50%);
+            outline: 0;
+        }
+        
+        .eye-toggle-button svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        #password {
+            padding-right: 45px !important;
+            width: 100%;
+        }
+
+        .eye circle:nth-of-type(2) {
+            fill: white;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="box">
-        <div class="login">
-            <div class="loginBx">
-                <h2>
-                    <i class="fa-solid fa-right-to-bracket"> Connexion</i>
-                </h2>
-                <form id="login-form">
-                    <input type="text" name="username" id="username" placeholder="Nom d'utilisateur" required>
-                    <input type="password" name="password" id="password" placeholder="Mot de passe" required>
-                    <input type="submit" value="Se connecter">
-                </form>
-                <div class="group">
-                    <p></p>
-                    <p></p>
+    <div class="container">
+        <div class="login-box">
+            <h2><i class="fa-solid fa-right-to-bracket"></i> Connexion</h2>
+            <form id="login-form">
+                <div class="input-box">
+                    <input type="text" name="username" id="username" required>
+                    <label>Nom d'utilisateur</label>
                 </div>
-                <div id="result"></div>
-            </div>
+                <div class="input-box password-container">
+                    <input type="password" name="password" id="password" required>
+                    <label>Mot de passe</label>
+                    <button type="button" class="eye-toggle-button" title="Afficher le mot de passe" aria-pressed="false">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <mask id="eye-open">
+                                    <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12V20H12H1V12Z" fill="#D9D9D9" stroke="black"
+                                        stroke-width="1.5" stroke-linejoin="round" />
+                                </mask>
+                                <mask id="eye-closed">
+                                    <path d="M1 12C1 12 5 20 12 20C19 20 23 12 23 12V20H12H1V12Z" fill="#D9D9D9" />
+                                </mask>
+                            </defs>
+                            <path class="lid lid--upper" d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path class="lid lid--lower" d="M1 12C1 12 5 20 12 20C19 20 23 12 23 12" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <g mask="url(#eye-open)">
+                                <g class="eye">
+                                    <circle cy="12" cx="12" r="4" fill="currentColor" />
+                                    <circle cy="11" cx="13" r="1" fill="black" />
+                                </g>
+                            </g>
+                        </svg>
+                        <span class="sr-only">Afficher</span>
+                    </button>
+                </div>
+                <button type="submit" class="btn">Se connecter</button>
+            </form>
+            <div id="result"></div>
         </div>
+        <span style="--i:0;"></span>
+        <span style="--i:1;"></span>
+        <span style="--i:2;"></span>
+        <span style="--i:3;"></span>
+        <span style="--i:4;"></span>
+        <span style="--i:5;"></span>
+        <span style="--i:6;"></span>
+        <span style="--i:7;"></span>
+        <span style="--i:8;"></span>
+        <span style="--i:9;"></span>
+        <span style="--i:10;"></span>
+        <span style="--i:11;"></span>
+        <span style="--i:12;"></span>
+        <span style="--i:13;"></span>
+        <span style="--i:14;"></span>
+        <span style="--i:15;"></span>
+        <span style="--i:16;"></span>
+        <span style="--i:17;"></span>
+        <span style="--i:18;"></span>
+        <span style="--i:19;"></span>
+        <span style="--i:20;"></span>
+        <span style="--i:21;"></span>
+        <span style="--i:22;"></span>
+        <span style="--i:23;"></span>
+        <span style="--i:24;"></span>
+        <span style="--i:25;"></span>
+        <span style="--i:26;"></span>
+        <span style="--i:27;"></span>
+        <span style="--i:28;"></span>
+        <span style="--i:29;"></span>
+        <span style="--i:30;"></span>
+        <span style="--i:31;"></span>
+        <span style="--i:32;"></span>
+        <span style="--i:33;"></span>
+        <span style="--i:34;"></span>
+        <span style="--i:35;"></span>
+        <span style="--i:36;"></span>
+        <span style="--i:37;"></span>
+        <span style="--i:38;"></span>
+        <span style="--i:39;"></span>
+        <span style="--i:40;"></span>
+        <span style="--i:41;"></span>
+        <span style="--i:42;"></span>
+        <span style="--i:43;"></span>
+        <span style="--i:44;"></span>
+        <span style="--i:45;"></span>
+        <span style="--i:46;"></span>
+        <span style="--i:47;"></span>
+        <span style="--i:48;"></span>
+        <span style="--i:49;"></span>
     </div>
+
+    <!-- GSAP scripts for animations -->
+    <script src="https://assets.codepen.io/16327/MorphSVGPlugin3.min.js"></script>
+    <script src="https://assets.codepen.io/16327/ScrambleTextPlugin3.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.11.0/dist/gsap.min.js"></script>
+
     <script>
+        // Original login form functionality
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -39,7 +169,145 @@
             if (result.success) {
                 window.location.href = '/';
             } else {
-                document.getElementById('result').innerHTML = `<p style="color:red;">${result.error}</p>`;
+                document.getElementById('result').innerHTML = `<p style="color:red;text-align:center;margin-top:10px;">${result.error}</p>`;
+            }
+        });
+
+        // Password toggle eye functionality
+        gsap.registerPlugin(ScrambleTextPlugin, MorphSVGPlugin);
+
+        const BLINK_SPEED = 0.075;
+        const TOGGLE_SPEED = 0.125;
+        const ENCRYPT_SPEED = 1;
+
+        let busy = false;
+
+        const EYE = document.querySelector('.eye');
+        const TOGGLE = document.querySelector('.eye-toggle-button');
+        const INPUT = document.querySelector('#password');
+        const PROXY = document.createElement('div');
+
+        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~,.<>?/;":][}{+_)(*&^%$#@!±=-§';
+
+        let blinkTl;
+        const BLINK = () => {
+            const delay = gsap.utils.random(2, 8);
+            const duration = BLINK_SPEED;
+            const repeat = Math.random() > 0.5 ? 3 : 1;
+            blinkTl = gsap.timeline({
+                delay,
+                onComplete: () => BLINK(),
+                repeat,
+                yoyo: true
+            })
+            .to('.lid--upper', {
+                morphSVG: '.lid--lower',
+                duration
+            })
+            .to('#eye-open path', {
+                morphSVG: '#eye-closed path',
+                duration
+            }, 0);
+        };
+
+        BLINK();
+
+        const posMapper = gsap.utils.mapRange(-100, 100, 30, -30);
+        let reset;
+
+        const MOVE_EYE = ({ x, y }) => {
+            if (reset) reset.kill();
+            reset = gsap.delayedCall(2, () => {
+                gsap.to('.eye', { xPercent: 0, yPercent: 0, duration: 0.2 });
+            });
+            const BOUNDS = EYE.getBoundingClientRect();
+            gsap.set('.eye', {
+                xPercent: gsap.utils.clamp(-30, 30, posMapper(BOUNDS.x - x)),
+                yPercent: gsap.utils.clamp(-30, 30, posMapper(BOUNDS.y - y))
+            });
+        };
+
+        window.addEventListener('pointermove', MOVE_EYE);
+
+        TOGGLE.addEventListener('click', () => {
+            if (busy) return;
+            const isText = INPUT.matches('[type=password]');
+            const val = INPUT.value;
+            busy = true;
+            TOGGLE.setAttribute('aria-pressed', isText);
+            const duration = TOGGLE_SPEED;
+
+            if (isText) {
+                if (blinkTl) blinkTl.kill();
+
+                gsap.timeline({
+                    onComplete: () => {
+                        busy = false;
+                    }
+                })
+                .to('.lid--upper', {
+                    morphSVG: '.lid--lower',
+                    duration
+                })
+                .to('#eye-open path', {
+                    morphSVG: '#eye-closed path',
+                    duration
+                }, 0)
+                .to(PROXY, {
+                    duration: ENCRYPT_SPEED,
+                    onStart: () => {
+                        INPUT.type = 'text';
+                    },
+                    onComplete: () => {
+                        PROXY.innerHTML = '';
+                        INPUT.value = val;
+                    },
+                    scrambleText: {
+                        chars,
+                        text: INPUT.value.charAt(INPUT.value.length - 1) === ' ' ?
+                            `${INPUT.value.slice(0, INPUT.value.length - 1)}${chars.charAt(
+                                Math.floor(Math.random() * chars.length))
+                            }` :
+                            INPUT.value
+                    },
+                    onUpdate: () => {
+                        const len = val.length - PROXY.innerText.length;
+                        INPUT.value = `${PROXY.innerText}${new Array(len).fill('•').join('')}`;
+                    }
+                }, 0);
+            } else {
+                gsap.timeline({
+                    onComplete: () => {
+                        BLINK();
+                        busy = false;
+                    }
+                })
+                .to('.lid--upper', {
+                    morphSVG: '.lid--upper',
+                    duration
+                })
+                .to('#eye-open path', {
+                    morphSVG: '#eye-open path',
+                    duration
+                }, 0)
+                .to(PROXY, {
+                    duration: ENCRYPT_SPEED,
+                    onComplete: () => {
+                        INPUT.type = 'password';
+                        INPUT.value = val;
+                        PROXY.innerHTML = '';
+                    },
+                    scrambleText: {
+                        chars,
+                        text: new Array(INPUT.value.length).fill('•').join('')
+                    },
+                    onUpdate: () => {
+                        INPUT.value = `${PROXY.innerText}${val.slice(
+                            PROXY.innerText.length,
+                            val.length)
+                            }`;
+                    }
+                }, 0);
             }
         });
     </script>

@@ -1,7 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
-    background-color: #f4f4f4;
+    background-color: #1f293a;
 }
 h1 {
     color: #333;
@@ -62,7 +62,7 @@ a:hover {
     --transform-leg2: none;
     --transform-calf2: none;
   
-    background: none;
+    background: #1f293a;
     border: 0;
     color: #f4f7ff;
     cursor: pointer;
