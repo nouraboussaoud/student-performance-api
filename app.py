@@ -1,5 +1,6 @@
+
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
-from model import load_data, preprocess_data, train_model, train_gradient_boosting, train_kmeans, predict_student_outcome, load_model, load_gradient_boosting, load_kmeans, load_scaler
+from model import load_data, preprocess_data, train_gradient_boosting, train_kmeans, predict_student_outcome, load_gradient_boosting, load_kmeans, load_scaler
 import pandas as pd
 import json
 import joblib
@@ -19,7 +20,6 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'fallback-secret-key')
 
 DATA_PATH = 'data/Student_performance_data _.csv'
-MODEL_PATH = 'models/random_forest_model.pkl'
 GB_MODEL_PATH = 'models/gradient_boosting_model.pkl'
 KMEANS_PATH = 'models/kmeans_model.pkl'
 SCALER_PATH = 'models/scaler.pkl'
@@ -29,12 +29,10 @@ try:
     X_scaled, y, scaler, features = preprocess_data(df)
     os.makedirs('models', exist_ok=True)
     joblib.dump(scaler, SCALER_PATH)
-    if os.path.exists(MODEL_PATH) and os.path.exists(GB_MODEL_PATH) and os.path.exists(KMEANS_PATH):
-        rf_model = load_model(MODEL_PATH)
+    if os.path.exists(GB_MODEL_PATH) and os.path.exists(KMEANS_PATH):
         gb_model = load_gradient_boosting(GB_MODEL_PATH)
         kmeans = load_kmeans(KMEANS_PATH)
     else:
-        rf_model, X_test, y_test = train_model(X_scaled, y, MODEL_PATH)
         gb_model, _, _ = train_gradient_boosting(X_scaled, y, GB_MODEL_PATH)
         kmeans = train_kmeans(X_scaled, cluster_features=['GPA', 'StudyTimeWeekly', 'Absences'], n_clusters=4, kmeans_path=KMEANS_PATH)
 except FileNotFoundError as e:
@@ -104,21 +102,17 @@ def predict():
                 return jsonify({'error': f'Le GPA doit être entre 0 et 4'})
             if feature == 'Absences' and value < 0:
                 return jsonify({'error': f'Le nombre d\'absences ne peut pas être négatif'})
-            if feature == 'StudyTimeWeekly' and value < 0:
-                return jsonify({'error': f'Le temps d\'étude ne peut pas être négatif'})
+            if feature == 'StudyTimeWeekly' and (value < 0 or value > 40):
+                return jsonify({'error': f'Le temps d\'étude doit être compris entre 0 et 40 heures'})
             
             student_data.append(value)
         
         # Afficher les données après traitement pour débogage
         print("Données traitées:", student_data)
         
-        model_type = request.args.get('model', 'random_forest')
-        if model_type not in ['random_forest', 'gradient_boosting', 'ensemble']:
-            return jsonify({'error': 'Type de modèle invalide'})
-        
-        result = predict_student_outcome([student_data], rf_model, gb_model, kmeans, scaler, 
+        result = predict_student_outcome([student_data], None, gb_model, kmeans, scaler, 
                                         cluster_features=['GPA', 'StudyTimeWeekly', 'Absences'], 
-                                        model_type=model_type)
+                                        model_type='gradient_boosting')
         return jsonify(result)
     except Exception as e:
         import traceback
