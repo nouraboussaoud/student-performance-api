@@ -4,6 +4,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.cluster import KMeans
+from sklearn.model_selection import GridSearchCV
 import joblib
 import os
 
@@ -13,6 +14,21 @@ def load_data(data_path='data/Student_performance_data _.csv'):
     return df
 
 def preprocess_data(df):
+    # Check for missing values
+    if df.isnull().sum().any():
+        print("Warning: Missing values detected")
+        print(df.isnull().sum())
+    
+    # Check value distributions
+    print("\nValue distributions:")
+    print(df.describe())
+    
+    # Check categorical value counts
+    categorical_cols = ['ParentalEducation', 'StudyTimeWeekly', 'ParentalSupport']
+    for col in categorical_cols:
+        if col in df.columns:
+            print(f"\n{col} value counts:")
+            print(df[col].value_counts())
     le = LabelEncoder()
     categorical_cols = ['ParentalEducation', 'StudyTimeWeekly', 'ParentalSupport']
     for col in categorical_cols:
@@ -21,16 +37,39 @@ def preprocess_data(df):
     features = ['Age', 'StudyTimeWeekly', 'Absences', 'GPA', 'ParentalEducation', 'ParentalSupport']
     X = df[features]
     y = df['GradeClass']
+    # In preprocess_data()
+    print("\nGradeClass distribution:")
+    print(y.value_counts())
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     return X_scaled, y, scaler, features
 
 def train_model(X, y, model_path='models/random_forest_model.pkl'):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    param_grid = {
+        'n_estimators': [50, 100, 200],
+        'max_depth': [None, 10, 20],
+        'min_samples_split': [2, 5, 10]
+    }
+    model = GridSearchCV(
+        RandomForestClassifier(random_state=42),
+        param_grid,
+        cv=5,
+        scoring='accuracy'
+    )
+    model.fit(X_train, y_train)
+    print("Best parameters:", model.best_params_)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
+    # Evaluate
+    from sklearn.metrics import classification_report, confusion_matrix
+    y_pred = model.predict(X_test)
+    print("Classification Report:")
+    print(classification_report(y_test, y_pred))
+    print("\nConfusion Matrix:")
+    print(confusion_matrix(y_test, y_pred))
     joblib.dump(model, model_path)
-    print(f"✅ RandomForest model saved to {model_path}")
     return model, X_test, y_test
 
 def train_gradient_boosting(X, y, model_path='models/gradient_boosting_model.pkl'):
